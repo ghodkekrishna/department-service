@@ -3,6 +3,7 @@ package net.codefusionhub.departmentservice.service.Impl;
 import lombok.AllArgsConstructor;
 import net.codefusionhub.departmentservice.Dto.DepartmentDto;
 import net.codefusionhub.departmentservice.entity.Department;
+import net.codefusionhub.departmentservice.mapper.DepartmentMapper;
 import net.codefusionhub.departmentservice.repository.DepartmentRepository;
 import net.codefusionhub.departmentservice.service.DepartmentService;
 import org.springframework.stereotype.Service;
@@ -14,32 +15,15 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentRepository departmentRepository;
     @Override
     public DepartmentDto saveDepartment(DepartmentDto departmentDto) {
-        Department department = new Department(
-                departmentDto.getId(),
-                departmentDto.getDepartmentName(),
-                departmentDto.getDepartmentDescription(),
-                departmentDto.getDepartmentCode()
-        );
-
+        Department department = DepartmentMapper.mapToDepartment(departmentDto);
         Department savedDepartment = departmentRepository.save(department);
 
-        return new DepartmentDto(
-                savedDepartment.getId(),
-                savedDepartment.getDepartmentName(),
-                savedDepartment.getDepartmentDescription(),
-                savedDepartment.getDepartmentCode()
-        );
+        return DepartmentMapper.mapToDepartmentDto(savedDepartment);
     }
 
     @Override
     public DepartmentDto getDepartmentByDepartmentCode(String departmentCode) {
         Department department = departmentRepository.findByDepartmentCode(departmentCode);
-
-        return new DepartmentDto(
-                department.getId(),
-                department.getDepartmentName(),
-                department.getDepartmentDescription(),
-                department.getDepartmentCode()
-        );
+        return DepartmentMapper.mapToDepartmentDto(department);
     }
 }
